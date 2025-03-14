@@ -279,7 +279,7 @@ export async function getOrder(orderId) {
 //     );
 // }
 
-export async function fetchExternalApi(requestBody) {
+export async function coinpalApi(requestBody) {
     try {
         // const requestBody = {
         //     amount: 100,
