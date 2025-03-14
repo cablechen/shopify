@@ -1,0 +1,36 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "0a39546b6f905e089e8d9cd1b91477ec"
+application_url = "https://arizona-explain-hose-actual.trycloudflare.com"
+embedded = true
+name = "modern-merchant-app"
+handle = "modern-merchant-app-20"
+
+[build]
+include_config_on_deploy = true
+automatically_update_urls_on_dev = true
+
+[webhooks]
+api_version = "2025-01"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/scopes_update" ]
+  uri = "/webhooks/app/scopes_update"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+
+[auth]
+redirect_urls = [
+  "https://arizona-explain-hose-actual.trycloudflare.com/auth/callback",
+  "https://arizona-explain-hose-actual.trycloudflare.com/auth/shopify/callback",
+  "https://arizona-explain-hose-actual.trycloudflare.com/api/auth/callback"
+]
+
+[pos]
+embedded = false
