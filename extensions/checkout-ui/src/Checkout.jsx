@@ -19,7 +19,7 @@ export default reactExtension(
 
 function Extension() {
   // 2. Use the extension API to gather context from the checkout and shop
-  const {orderConfirmation,selectedPaymentOptions, query} = useApi();
+  const {orderConfirmation,selectedPaymentOptions,shop, query} = useApi();
   // 安全访问订单号
   const orderNumber = orderConfirmation?.current?.number || "Loading...";
   const identityId = orderConfirmation?.current?.order?.id || "Unknown";
@@ -36,11 +36,11 @@ function Extension() {
   //
   // const orderData2 =  coinpalApi(orderData);
   // console.log("coinpal:", JSON.stringify(orderData2, null, 2));
-  console.log(shop);
+  console.log('shop',shop);
 
   // 3. Render a UI
-  console.log(orderConfirmation.current);
-  console.log(selectedPaymentOptions);
+  console.log('orderConfirmation',orderConfirmation);
+  console.log('selectedPaymentOptions',selectedPaymentOptions);
   // 安全访问支付方式类型
   const paymentMethodType = selectedPaymentOptions?.current?.[0]?.type || "Unknown";
   const paymentMethodHandle = selectedPaymentOptions?.current?.[0]?.handle || "N/A";
@@ -48,39 +48,39 @@ function Extension() {
   const isCoinpalPayment = paymentMethodType === "creditCard";
 
 
-  useEffect(() => {
-    if (orderId !== "Unknown") {
-      query(
-          `query getOrder($id: ID!) {
-          order(id: $id) {
-            id
-            name
-            createdAt
-            totalPriceSet {
-              shopMoney {
-                amount
-                currencyCode
-              }
-            }
-            customer {
-              displayName
-              email
-            }
-          }
-        }`,
-          { id: orderId }
-      )
-          .then(({ data, errors }) => {
-            if (errors) {
-              console.error("GraphQL 错误:", errors);
-            } else {
-              setOrderData(data.order);
-            }
-          })
-          .catch((error) => console.error("API 请求失败:", error))
-          .finally(() => setLoading(false));
-    }
-  }, [orderId, query]);
+  {/*useEffect(() => {*/}
+  //   if (orderId !== "Unknown") {
+  //     query(
+  //         `query getOrder($id: ID!) {
+  {/*        order(id: $id) {*/}
+  {/*          id*/}
+  {/*          name*/}
+  {/*          createdAt*/}
+  {/*          totalPriceSet {*/}
+  //             shopMoney {
+  //               amount
+  //               currencyCode
+  {/*            }*/}
+  {/*          }*/}
+  {/*          customer {*/}
+  {/*            displayName*/}
+  {/*            email*/}
+  {/*          }*/}
+  {/*        }*/}
+  {/*      }`,*/}
+  //         { id: orderId }
+  //     )
+  //         .then(({ data, errors }) => {
+  //           if (errors) {
+  //             console.error("GraphQL 错误:", errors);
+  //           } else {
+  //             setOrderData(data.order);
+  //           }
+  //         })
+  //         .catch((error) => console.error("API 请求失败:", error))
+  //         .finally(() => setLoading(false));
+  //   }
+  // }, [orderId, query]);
 
   return (
       <BlockStack>
