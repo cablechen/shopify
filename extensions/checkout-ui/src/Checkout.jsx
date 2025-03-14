@@ -40,7 +40,7 @@ function Extension() {
 
   // 3. Render a UI
   console.log(orderConfirmation.current);
-  console.log(selectedPaymentOptions.current);
+  console.log(selectedPaymentOptions);
   // 安全访问支付方式类型
   const paymentMethodType = selectedPaymentOptions?.current?.[0]?.type || "Unknown";
   const paymentMethodHandle = selectedPaymentOptions?.current?.[0]?.handle || "N/A";
