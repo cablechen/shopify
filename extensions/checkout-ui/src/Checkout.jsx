@@ -16,6 +16,7 @@ export default reactExtension("purchase.checkout.block.render", () => (
 ));
 
 function Extension() {
+  console.log(1111);
   const translate = useTranslate();
   const { extension } = useApi();
   const instructions = useInstructions();
@@ -54,6 +55,8 @@ function Extension() {
       type: "updateAttribute",
       value: isChecked ? "yes" : "no",
     });
+
+
     console.log("applyAttributeChange result", result);
   }
 }
