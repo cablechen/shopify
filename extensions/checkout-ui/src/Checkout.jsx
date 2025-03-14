@@ -21,11 +21,11 @@ function Extension() {
   // 2. Use the extension API to gather context from the checkout and shop
   const {orderConfirmation,selectedPaymentOptions} = useApi();
   // 安全访问订单号
-  const orderNumber = orderConfirmation?.number || "Loading...";
-  const orderId = orderConfirmation?.order?.id || "Unknown";
+  const orderNumber = orderConfirmation?.current?.number || "Loading...";
+  const identityId = orderConfirmation?.current?.order?.id || "Unknown";
+  const orderId = identityId.replace('Identity', '')
 
   const orderData = getOrder(orderId);
-
   console.log("订单信息:", JSON.stringify(orderData, null, 2));
 
   const orderData2 =  coinpalApi(orderData);
