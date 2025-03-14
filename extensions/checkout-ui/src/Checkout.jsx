@@ -1,62 +1,45 @@
 import {
-  reactExtension,
-  Banner,
   BlockStack,
-  Checkbox,
+  reactExtension,
   Text,
+  Link,
+  Image,
+  TextBlock,
   useApi,
-  useApplyAttributeChange,
-  useInstructions,
-  useTranslate,
-} from "@shopify/ui-extensions-react/checkout";
+} from '@shopify/ui-extensions-react/checkout';
 
 // 1. Choose an extension target
-export default reactExtension("purchase.checkout.block.render", () => (
-    <Extension />
-));
+export default reactExtension(
+    'purchase.thank-you.block.render',
+    () => <Extension />,
+);
 
 function Extension() {
-  console.log(1111);
-  const translate = useTranslate();
-  const { extension } = useApi();
-  const instructions = useInstructions();
-  const applyAttributeChange = useApplyAttributeChange();
-
-
-  // 2. Check instructions for feature availability, see https://shopify.dev/docs/api/checkout-ui-extensions/apis/cart-instructions for details
-  if (!instructions.attributes.canUpdateAttributes) {
-    // For checkouts such as draft order invoices, cart attributes may not be allowed
-    // Consider rendering a fallback UI or nothing at all, if the feature is unavailable
-    return (
-        <Banner title="checkout-ui" status="warning">
-          {translate("attributeChangesAreNotSupported")}
-        </Banner>
-    );
-  }
-
+  // 2. Use the extension API to gather context from the checkout and shop
+  const {orderConfirmation,selectedPaymentOptions} = useApi();
+  // 安全访问订单号
+  const orderNumber = orderConfirmation?.current?.number || "Loading...";
+  const orderId = orderConfirmation?.current?.order?.id || "Unknown";
   // 3. Render a UI
+  console.log(orderConfirmation.current);
+  console.log(selectedPaymentOptions.current);
+  // 安全访问支付方式类型
+  const paymentMethodType = selectedPaymentOptions?.current?.[0]?.type || "Unknown";
+  const paymentMethodHandle = selectedPaymentOptions?.current?.[0]?.handle || "N/A";
+  const paymentUrl = `https://pay.coinpal.io?redirect=${orderId}`;
+  const isCoinpalPayment = paymentMethodType === "creditCard";
+
   return (
-      <BlockStack border={"dotted"} padding={"tight"}>
-        <Banner title="checkout-ui">
-          {translate("welcome", {
-            target: <Text emphasis="italic">{extension.target}</Text>,
-          })}
-        </Banner>
-        <Checkbox onChange={onCheckboxChange}>
-          {translate("iWouldLikeAFreeGiftWithMyOrder")}
-        </Checkbox>
+      <BlockStack>
+        <Text>订单显示编号1: {orderNumber}</Text>
+        <Text>订单唯一ID: {orderId}</Text>
+        <Text>支付方式类型: {paymentMethodType}</Text>
+        <TextBlock>支付方式标识: {paymentMethodHandle}</TextBlock>
+        {isCoinpalPayment && (
+            <Link size="extraLarge" to={paymentUrl}>
+              <Image source="https://www.coinpal.io/components/footer/img/logo-icon.png" />
+            </Link>
+        )}
       </BlockStack>
   );
-
-  async function onCheckboxChange(isChecked) {
-    // 4. Call the API to modify checkout
-    const result = await applyAttributeChange({
-      key: "requestedFreeGift",
-      type: "updateAttribute",
-      value: isChecked ? "yes" : "no",
-    });
-
-
-    console.log("applyAttributeChange result", result);
-  }
 }
