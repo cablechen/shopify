@@ -55,9 +55,13 @@ async function makeGraphQLQuery(query, variables) {
         query,
         variables,
     };
-
-    const res = await fetch("shopify:admin/api/graphql.json", {
+    const url = 'https://coinpal-test.myshopify.com/admin/api/2025-01/graphql.json';
+    const res = await fetch(url, {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-Shopify-Access-Token":  process.env.SHOPIFY_API_KEY,
+        },
         body: JSON.stringify(graphQLQuery),
     });
 
