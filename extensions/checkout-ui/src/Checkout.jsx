@@ -1,3 +1,4 @@
+import {useEffect, useState} from 'react';
 import {
   BlockStack,
   reactExtension,
@@ -7,9 +8,7 @@ import {
   TextBlock,
   useApi,
 } from '@shopify/ui-extensions-react/checkout';
-import {useEffect, useState} from 'react';
-import { getOrder,coinpalApi } from "./utils";
-
+import {coinpalApi } from "./utils";
 
 // 1. Choose an extension target
 export default reactExtension(
@@ -19,24 +18,11 @@ export default reactExtension(
 
 function Extension() {
   // 2. Use the extension API to gather context from the checkout and shop
-  const {orderConfirmation,selectedPaymentOptions,shop, query} = useApi();
+  const {orderConfirmation,selectedPaymentOptions,shop} = useApi();
   // 安全访问订单号
   const orderNumber = orderConfirmation?.current?.number || "Loading...";
-  const identityId = orderConfirmation?.current?.order?.id || "Unknown";
-  const orderId = identityId.replace('Identity', '')
+  const orderId = orderConfirmation?.current?.order?.id || "Unknown";
   const [orderData, setOrderData] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  console.log(orderId);
-
-  // const orderData = getOrder(orderId);
-  // console.log("订单信息:", JSON.stringify(orderData, null, 2));
-  //
-  //
-  //
-  // const orderData2 =  coinpalApi(orderData);
-  // console.log("coinpal:", JSON.stringify(orderData2, null, 2));
-  console.log('shop',shop);
 
   // 3. Render a UI
   console.log('orderConfirmation',orderConfirmation);
@@ -46,41 +32,12 @@ function Extension() {
   const paymentMethodHandle = selectedPaymentOptions?.current?.[0]?.handle || "N/A";
   const paymentUrl = `https://pay.coinpal.io?redirect=${orderId}`;
   const isCoinpalPayment = paymentMethodType === "creditCard";
-
-
-  {/*useEffect(() => {*/}
-  //   if (orderId !== "Unknown") {
-  //     query(
-  //         `query getOrder($id: ID!) {
-  {/*        order(id: $id) {*/}
-  {/*          id*/}
-  {/*          name*/}
-  {/*          createdAt*/}
-  {/*          totalPriceSet {*/}
-  //             shopMoney {
-  //               amount
-  //               currencyCode
-  {/*            }*/}
-  {/*          }*/}
-  {/*          customer {*/}
-  {/*            displayName*/}
-  {/*            email*/}
-  {/*          }*/}
-  {/*        }*/}
-  {/*      }`,*/}
-  //         { id: orderId }
-  //     )
-  //         .then(({ data, errors }) => {
-  //           if (errors) {
-  //             console.error("GraphQL 错误:", errors);
-  //           } else {
-  //             setOrderData(data.order);
-  //           }
-  //         })
-  //         .catch((error) => console.error("API 请求失败:", error))
-  //         .finally(() => setLoading(false));
-  //   }
-  // }, [orderId, query]);
+  const currData = {
+     'myshopifyDomain' : shop?.myshopifyDomain,
+      'orderId':orderId
+  };
+  const coinpalData =  coinpalApi(currData);
+  console.log("coinpal:", JSON.stringify(coinpalData, null, 2));
 
   return (
       <BlockStack>
