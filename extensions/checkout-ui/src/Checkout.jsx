@@ -7,7 +7,7 @@ import {
   TextBlock,
   useApi,
 } from '@shopify/ui-extensions-react/checkout';
-
+import {useEffect, useState} from 'react';
 import { getOrder,coinpalApi } from "./utils";
 
 
@@ -19,14 +19,35 @@ export default reactExtension(
 
 function Extension() {
   // 2. Use the extension API to gather context from the checkout and shop
-  const {orderConfirmation,selectedPaymentOptions} = useApi();
+  const {orderConfirmation,selectedPaymentOptions,query} = useApi();
   // 安全访问订单号
   const orderNumber = orderConfirmation?.current?.number || "Loading...";
   const identityId = orderConfirmation?.current?.order?.id || "Unknown";
   const orderId = identityId.replace('Identity', '')
+  const [data, setData] = useState();
+  useEffect(() => {
+    query(
+        `query ($first: Int!) {
+        products(first: $first) {
+          nodes {
+            id
+            title
+          }
+        }
+      }`,
+        {
+          variables: {first: 5},
+        },
+    )
+        .then(({data, errors}) => setData(data))
+        .catch(console.error);
+  }, [query]);
+  console.log('--------------------------->',data);
 
-  const orderData = getOrder(orderId);
-  console.log("订单信息:", JSON.stringify(orderData, null, 2));
+  // const orderData = getOrder(orderId);
+  // console.log("订单信息:", JSON.stringify(orderData, null, 2));
+
+
 
   const orderData2 =  coinpalApi(orderData);
   console.log("coinpal:", JSON.stringify(orderData2, null, 2));
