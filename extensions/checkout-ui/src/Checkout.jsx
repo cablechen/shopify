@@ -8,6 +8,9 @@ import {
   useApi,
 } from '@shopify/ui-extensions-react/checkout';
 
+import { getOrder,fetchExternalApi } from "./utils";
+
+
 // 1. Choose an extension target
 export default reactExtension(
     'purchase.thank-you.block.render',
@@ -20,6 +23,11 @@ function Extension() {
   // 安全访问订单号
   const orderNumber = orderConfirmation?.current?.number || "Loading...";
   const orderId = orderConfirmation?.current?.order?.id || "Unknown";
+
+  const orderData = getOrder(orderId);
+
+  console.log("订单信息:", JSON.stringify(orderData, null, 2));
+
   // 3. Render a UI
   console.log(orderConfirmation.current);
   console.log(selectedPaymentOptions.current);
