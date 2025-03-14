@@ -21,8 +21,8 @@ function Extension() {
   // 2. Use the extension API to gather context from the checkout and shop
   const {orderConfirmation,selectedPaymentOptions} = useApi();
   // 安全访问订单号
-  const orderNumber = orderConfirmation?.current?.number || "Loading...";
-  const orderId = orderConfirmation?.current?.order?.id || "Unknown";
+  const orderNumber = orderConfirmation?.number || "Loading...";
+  const orderId = orderConfirmation?.order?.id || "Unknown";
 
   const orderData = getOrder(orderId);
 
