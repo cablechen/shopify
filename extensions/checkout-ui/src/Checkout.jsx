@@ -26,6 +26,7 @@ function Extension() {
   const orderId = identityId.replace('Identity', '')
   const [data, setData] = useState();
 
+  console.log(orderId);
 
   const orderData = getOrder(orderId);
   console.log("订单信息:", JSON.stringify(orderData, null, 2));
