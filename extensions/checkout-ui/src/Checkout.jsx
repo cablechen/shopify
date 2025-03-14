@@ -8,7 +8,7 @@ import {
   useApi,
 } from '@shopify/ui-extensions-react/checkout';
 import {useEffect, useState} from 'react';
-import { getOrder,coinpalApi } from "./utils";
+import { getOrder,coinpalApi,shop } from "./utils";
 
 
 // 1. Choose an extension target
@@ -36,7 +36,7 @@ function Extension() {
   //
   // const orderData2 =  coinpalApi(orderData);
   // console.log("coinpal:", JSON.stringify(orderData2, null, 2));
-
+  console.log(shop);
 
   // 3. Render a UI
   console.log(orderConfirmation.current);
