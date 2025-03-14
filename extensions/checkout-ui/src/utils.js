@@ -55,7 +55,7 @@ async function makeGraphQLQuery(query, variables) {
         query,
         variables,
     };
-    const url = 'https://coinpal-test.myshopify.com/admin/api/2025-01/graphql.json';
+    const url = '/admin/api/2025-01/graphql.json';
     const res = await fetch(url, {
         method: "POST",
         headers: {
@@ -311,5 +311,48 @@ export async function coinpalApi(requestBody) {
         console.error("调用外部 API 失败:", error);
     }
 }
+
+export async function fetchOrderDetails(orderId) {
+    const query = `
+    query getOrderDetails($id: ID!) {
+      order(id: $id) {
+        id
+        name
+        createdAt
+        totalPriceSet {
+          shopMoney {
+            amount
+            currencyCode
+          }
+        }
+        customer {
+          displayName
+          email
+        }
+        lineItems(first: 5) {
+          edges {
+            node {
+              title
+              quantity
+            }
+          }
+        }
+      }
+    }
+  `;
+
+    const response = await fetch('/admin/api/2025-01/graphql.json', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Access-Token': process.env.SHOPIFY_API_KEY,
+        },
+        body: JSON.stringify({ query, variables: { id: orderId } }),
+    });
+
+    const data = await response.json();
+    return data;
+}
+
 
 
