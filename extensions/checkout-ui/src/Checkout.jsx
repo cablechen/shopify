@@ -8,7 +8,7 @@ import {
   useApi,
 } from '@shopify/ui-extensions-react/checkout';
 import {useEffect, useState} from 'react';
-import { getOrder,coinpalApi,shop } from "./utils";
+import { getOrder,coinpalApi } from "./utils";
 
 
 // 1. Choose an extension target
